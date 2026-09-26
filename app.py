@@ -57,26 +57,40 @@ MODEL_OUTPUT_DIR = os.path.join(
 
 print("Loading dataset...")
 
-df = pd.read_csv(DATA_FILE)
-
-df["date"] = pd.to_datetime(
-    df["date"]
+df = pd.read_csv(
+    DATA_FILE,
+    usecols=[
+        "id",
+        "date",
+        "store_nbr",
+        "family",
+        "sales",
+        "onpromotion"
+    ],
+    dtype={
+        "id": "int32",
+        "store_nbr": "int16",
+        "family": "category",
+        "sales": "float32",
+        "onpromotion": "int16"
+    },
+    parse_dates=["date"]
 )
 
-df["year"] = (
-    df["date"].dt.year
-)
+df["year"] = df["date"].dt.year.astype("int16")
 
-df["month"] = (
-    df["date"].dt.month
-)
+df["month"] = df["date"].dt.month.astype("int8")
 
 df["month_name"] = (
-    df["date"].dt.strftime("%b")
+    df["date"]
+    .dt.strftime("%b")
+    .astype("category")
 )
 
 df["day_name"] = (
-    df["date"].dt.day_name()
+    df["date"]
+    .dt.day_name()
+    .astype("category")
 )
 
 
