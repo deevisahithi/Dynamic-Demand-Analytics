@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request
 import pandas as pd
 import numpy as np
 import os
+import urllib.request
 
 app = Flask(__name__)
 
@@ -24,6 +25,19 @@ DATA_FILE = os.path.join(
     "Data",
     "train.csv"
 )
+
+DATASET_URL = "https://github.com/deevisahithi/Dynamic-Demand-Analytics/releases/download/v1.0.0/train.csv"
+
+if not os.path.exists(DATA_FILE):
+    print("train.csv not found. Downloading dataset...")
+    os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
+
+    urllib.request.urlretrieve(
+        DATASET_URL,
+        DATA_FILE
+    )
+
+    print("train.csv downloaded successfully.")
 
 HOLIDAY_FILE = os.path.join(
     BASE_DIR,
