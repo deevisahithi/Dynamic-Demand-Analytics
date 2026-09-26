@@ -21,13 +21,13 @@ BASE_DIR = os.path.dirname(
 
 DATA_FILE = os.path.join(
     BASE_DIR,
-    "data",
+    "Data",
     "train.csv"
 )
 
 HOLIDAY_FILE = os.path.join(
     BASE_DIR,
-    "data",
+    "Data",
     "holidays_events.csv"
 )
 
