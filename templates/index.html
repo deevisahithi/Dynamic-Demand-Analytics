@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>DemandPulse | Retail Analytics</title>
+
+<link rel="preconnect"
+      href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+</head>
+
+<body>
+
+<header>
+<div class="brand">
+
+    <div class="logo">
+        DP
+    </div>
+
+    <div>
+
+        <h1>
+            DemandPulse
+        </h1>
+
+        <p>
+            Dynamic Retail Demand Intelligence
+        </p>
+
+    </div>
+
+</div>
+
+
+<nav>
+
+    <a href="#overview">
+        Overview
+    </a>
+
+    <a href="#analytics">
+        Analytics
+    </a>
+
+    <a href="#insights">
+        Insights
+    </a>
+
+    <a href="#prediction">
+        Prediction
+    </a>
+
+</nav>
+
+</header>
+
+<main>
+
+<!-- =========================================================
+     HERO
+     ========================================================= -->
+
+<section class="hero" id="overview">
+<div>
+
+    <span class="tag">
+        RETAIL & E-COMMERCE ANALYTICS
+    </span>
+
+    <h2>
+        Understand demand.<br>
+        <span>Plan smarter.</span>
+    </h2>
+
+    <p>
+        Analyze historical retail sales to discover
+        demand trends, seasonal patterns, product
+        performance and potential inventory planning risks.
+    </p>
+
+</div>
+
+
+<div class="coverage">
+
+    <strong>
+        DATA COVERAGE
+    </strong>
+
+    <span id="coverageText">
+        Loading...
+    </span>
+
+</div>
+
+</section>
+
+<!-- =========================================================
+     FILTERS
+     ========================================================= -->
+
+<section class="filters">
+
+<div>
+
+    <label>
+        Start Date
+    </label>
+
+    <input
+        type="date"
+        id="startDate">
+
+</div>
+
+
+<div>
+
+    <label>
+        End Date
+    </label>
+
+    <input
+        type="date"
+        id="endDate">
+
+</div>
+
+
+<div>
+
+    <label>
+        Store
+    </label>
+
+    <select id="store">
+
+        <option value="all">
+            All Stores
+        </option>
+
+    </select>
+
+</div>
+
+
+<div>
+
+    <label>
+        Product Family
+    </label>
+
+    <select id="family">
+
+        <option value="all">
+            All Products
+        </option>
+
+    </select>
+
+</div>
+
+
+<div>
+
+    <label>
+        Promotion
+    </label>
+
+    <select id="promotion">
+
+        <option value="all">
+            All
+        </option>
+
+        <option value="yes">
+            With Promotion
+        </option>
+
+        <option value="no">
+            Without Promotion
+        </option>
+
+    </select>
+
+</div>
+
+
+<button id="reset">
+    Reset
+</button>
+
+</section>
+
+<!-- =========================================================
+     KPI
+     ========================================================= -->
+
+<section class="kpis">
+<div class="kpi">
+
+    <span>
+        Total Demand
+    </span>
+
+    <strong id="total">
+        -
+    </strong>
+
+    <small>
+        Total observed sales
+    </small>
+
+</div>
+
+
+<div class="kpi">
+
+    <span>
+        Average Demand
+    </span>
+
+    <strong id="average">
+        -
+    </strong>
+
+    <small>
+        Average sales
+    </small>
+
+</div>
+
+
+<div class="kpi">
+
+    <span>
+        Peak Demand
+    </span>
+
+    <strong id="peak">
+        -
+    </strong>
+
+    <small>
+        Highest observed sale
+    </small>
+
+</div>
+
+
+<div class="kpi">
+
+    <span>
+        Stores
+    </span>
+
+    <strong id="stores">
+        -
+    </strong>
+
+    <small>
+        Stores in selection
+    </small>
+
+</div>
+
+</section>
+
+<!-- =========================================================
+     LEVEL 1 - ANALYTICS
+     ========================================================= -->
+
+<div id="analytics">
+<!-- DAILY -->
+
+<section class="card">
+
+    <div class="heading">
+
+        <div>
+
+            <span>
+                01
+            </span>
+
+            <h3>
+                Daily Demand Trend
+            </h3>
+
+            <p class="chart-description">
+                This graph shows how total retail demand changes from day to day across the selected
+                period. It helps identify increasing or decreasing demand trends, sudden demand
+                increases, and unusual periods that may require closer inventory attention. The
+                rolling average helps smooth daily fluctuations and makes the overall demand trend
+                easier to understand.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div id="dailyChart"></div>
+
+</section>
+
+
+
+<!-- PRODUCT + MONTHLY -->
+
+<section class="two-columns">
+
+
+    <div class="card">
+
+        <div class="heading">
+
+            <div>
+
+                <span>
+                    02
+                </span>
+
+                <h3>
+                    Product Demand
+                </h3>
+
+                <p class="chart-description">
+                    This graph compares the total observed demand across different product families.
+                    It shows which product categories contribute the largest share of demand and which
+                    categories have relatively lower demand. This information can help retailers
+                    prioritize inventory planning for high-demand product categories.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div id="productChart"></div>
+
+    </div>
+
+
+
+    <div class="card">
+
+        <div class="heading">
+
+            <div>
+
+                <span>
+                    03
+                </span>
+
+                <h3>
+                    Monthly Demand
+                </h3>
+
+                <p class="chart-description">
+                    This graph shows how total demand varies across different months. It helps identify
+                    recurring seasonal patterns and months with relatively high or low demand. These
+                    patterns can support advance inventory planning for periods where demand is expected
+                    to change significantly.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div id="monthlyChart"></div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- YEARLY + STORE -->
+
+<section class="two-columns">
+
+
+    <div class="card">
+
+        <div class="heading">
+
+            <div>
+
+                <span>
+                    04
+                </span>
+
+                <h3>
+                    Yearly Demand
+                </h3>
+
+                <p class="chart-description">
+                    This graph compares total observed demand across different years in the historical
+                    dataset. It provides a long-term view of how retail demand has changed over time
+                    and helps identify broader increases, decreases, or relatively stable demand patterns.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div id="yearlyChart"></div>
+
+    </div>
+
+
+
+    <div class="card">
+
+        <div class="heading">
+
+            <div>
+
+                <span>
+                    05
+                </span>
+
+                <h3>
+                    Store Performance
+                </h3>
+
+                <p class="chart-description">
+                    This graph compares the total observed demand across stores. It identifies locations
+                    with higher and lower demand levels, showing that demand is not necessarily uniform
+                    across all stores. Store-level differences can help retailers plan inventory allocation
+                    according to local demand patterns.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div id="storeChart"></div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- WEEKDAY + PROMOTION -->
+
+<section class="two-columns">
+
+
+    <div class="card">
+
+        <div class="heading">
+
+            <div>
+
+                <span>
+                    06
+                </span>
+
+                <h3>
+                    Weekly Demand Pattern
+                </h3>
+
+                <p class="chart-description">
+                    This graph shows the average daily demand for each day of the week. It helps identify
+                    recurring weekly patterns, such as days with consistently higher or lower demand.
+                    Understanding these patterns can support short-term inventory and replenishment planning.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div id="weekdayChart"></div>
+
+    </div>
+
+
+
+    <div class="card">
+
+        <div class="heading">
+
+            <div>
+
+                <span>
+                    07
+                </span>
+
+                <h3>
+                    Promotion vs Demand
+                </h3>
+
+                <p class="chart-description">
+                    This graph compares the observed average demand for products associated with promotion
+                    activity and products without promotion activity. It helps identify whether demand
+                    levels differ between these groups in the historical data. The comparison shows an
+                    association in the data and should not be interpreted as proof that promotions directly
+                    caused the difference.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div id="promotionChart"></div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- HOLIDAY + SPIKES -->
+
+<section class="two-columns">
+
+
+    <div class="card">
+
+        <div class="heading">
+
+            <div>
+
+                <span>
+                    08
+                </span>
+
+                <h3>
+                    Holiday & Event Demand
+                </h3>
+
+                <p class="chart-description">
+                    This graph compares observed demand during holidays or special events with demand
+                    during regular days. It helps identify whether certain event periods are associated
+                    with noticeable changes in demand. These patterns can help retailers prepare inventory
+                    for periods with unusual demand behavior.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div id="holidayChart"></div>
+
+    </div>
+
+
+
+    <div class="card">
+
+        <div class="heading">
+
+            <div>
+
+                <span>
+                    09
+                </span>
+
+                <h3>
+                    Demand Spikes
+                </h3>
+
+                <p class="chart-description">
+                    This graph highlights periods where observed demand is significantly higher than the
+                    normal demand level. These unusual increases can indicate periods that require closer
+                    inventory attention. The detected spikes are statistical demand signals and do not
+                    represent confirmed stockouts or inventory shortages.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div id="spikeChart"></div>
+
+    </div>
+
+
+</section>
+
+</div>
+
+<!-- =========================================================
+     BUSINESS INSIGHTS
+     ========================================================= -->
+
+<section class="insights" id="insights">
+
+<span class="tag">
+    DATA-DRIVEN FINDINGS
+</span>
+
+<h2>
+    Business Insights
+</h2>
+
+
+<div class="insight-grid">
+
+
+    <div class="insight">
+
+        <span>
+            📈
+        </span>
+
+        <h4>
+            Peak Month
+        </h4>
+
+        <p id="highestMonth">
+            Loading...
+        </p>
+
+    </div>
+
+
+
+    <div class="insight">
+
+        <span>
+            🛍️
+        </span>
+
+        <h4>
+            Top Product
+        </h4>
+
+        <p id="topProduct">
+            Loading...
+        </p>
+
+    </div>
+
+
+
+    <div class="insight">
+
+        <span>
+            🏪
+        </span>
+
+        <h4>
+            Top Store
+        </h4>
+
+        <p id="topStore">
+            Loading...
+        </p>
+
+    </div>
+
+
+
+    <div class="insight">
+
+        <span>
+            📅
+        </span>
+
+        <h4>
+            Strongest Weekday
+        </h4>
+
+        <p id="bestDay">
+            Loading...
+        </p>
+
+    </div>
+
+
+</div>
+
+
+</section>
+
+<!-- =========================================================
+     LEVEL 2 - PREDICTION
+     ========================================================= -->
+
+<section class="model-section" id="prediction">
+<span class="tag">
+</span>
+
+
+<h2>
+    Predict future demand
+</h2>
+
+
+<p class="section-intro">
+    A Random Forest Regression model uses historical demand,
+    time patterns, product information, store information,
+    promotions and previous demand values to estimate future
+    demand.
+</p>
+
+
+
+<!-- MODEL METRICS -->
+
+<div class="model-metrics">
+
+
+    <div class="model-metric">
+
+        <span>
+            MAE
+        </span>
+
+        <strong id="modelMAE">
+            -
+        </strong>
+
+        <small>
+            Mean Absolute Error
+        </small>
+
+    </div>
+
+
+
+    <div class="model-metric">
+
+        <span>
+            RMSE
+        </span>
+
+        <strong id="modelRMSE">
+            -
+        </strong>
+
+        <small>
+            Root Mean Squared Error
+        </small>
+
+    </div>
+
+
+
+    <div class="model-metric">
+
+        <span>
+            R²
+        </span>
+
+        <strong id="modelR2">
+            
+        </strong>
+
+        <small>
+            Coefficient of Determination
+        </small>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ACTUAL VS PREDICTED -->
+
+<div class="card model-card">
+
+
+    <div class="heading">
+
+        <div>
+
+            <span>
+                10
+            </span>
+
+            <h3>
+                Actual vs Predicted Demand
+            </h3>
+
+            <p class="chart-description">
+                This graph compares the actual demand observed during the test period with the demand
+                predicted by the Random Forest model. When the two lines follow similar patterns,
+                the model is capturing the observed demand pattern more closely.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div id="actualPredictedChart"></div>
+
+
+</div>
+
+
+
+<!-- FEATURE IMPORTANCE -->
+
+<div class="card model-card">
+
+
+    <div class="heading">
+
+        <div>
+
+            <span>
+                11
+            </span>
+
+            <h3>
+                Feature Importance
+            </h3>
+
+            <p class="chart-description">
+                This graph shows the relative importance of the input features used by the Random Forest
+                model. Features with higher values contributed more to the model's predictions.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div id="featureImportanceChart"></div>
+
+
+</div>
+
+
+
+<!-- MODEL EXPLANATION -->
+
+<div class="model-explanation">
+
+
+    <div>
+
+        <span>
+            MODEL
+        </span>
+
+        <h3>
+            Random Forest Regression
+        </h3>
+
+        <p>
+            The model predicts numerical demand values rather than class labels. It combines multiple
+            decision trees to capture relationships between demand and factors such as previous sales,
+            time patterns, stores, product families and promotions.
+        </p>
+
+    </div>
+
+
+
+    <div>
+
+        <span>
+            TIME-AWARE EVALUATION
+        </span>
+
+        <h3>
+            Historical Data → Recent Test Period
+        </h3>
+
+        <p>
+            Earlier historical data is used for training and the most recent period is used for testing.
+            This keeps the evaluation aligned with the real-world task of predicting future demand.
+        </p>
+
+    </div>
+
+
+</div>
+
+</section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<footer>
+
+<strong>
+    DemandPulse
+</strong>
+
+<span>
+    Dynamic Retail Demand Analytics
+</span>
+
+</footer>
+
+<script
+    src="{{ url_for('static', filename='js/dashboard.js') }}">
+</script>
+
+</body>
+
+</html>
